@@ -59,9 +59,7 @@ for row in filter(lambda x: "Zusatz" not in x.value, lines):
         item = {}
         item['description'] = []
 
-# e4
-
 from jinja2 import Environment, PackageLoader, select_autoescape
 env = Environment(loader=PackageLoader('menu', 'templates'),autoescape=select_autoescape(['html', 'xml']))
 template = env.get_template('template.html')
-print template.render({ "menu": menu, "date": msg['Date'] })
+print template.render({ "menu": menu, "date": msg['Date'] }).encode( "utf-8" )
