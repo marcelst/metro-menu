@@ -1,0 +1,34 @@
+{
+   "date" : "Mon, 09 Jan 2017 10:38:30 +0000 (GMT)",
+   "menu" : [
+      {
+         "description" : [
+            "an buntem Gem�se",
+            "an Basmatireis",
+            "Chili-kokos"
+         ],
+         "preamble" : "Aus dem Wok",
+         "title" : "H�hnchenstreifen"
+      },
+      {
+         "description" : [
+            "an Pfefferrahm",
+            "mit Pommes-frites",
+            "und ein kleiner Salat"
+         ],
+         "title" : "Putensteak"
+      },
+      {
+         "description" : [
+            "mit einer Beilage nach Wahl"
+         ],
+         "title" : "H�hnchgulasch Curry"
+      },
+      {
+         "description" : [
+            "auf Tagliatelle mit Senf-Hollandaise"
+         ],
+         "title" : "Lachsfilet \"Pochiert \""
+      }
+   ]
+}

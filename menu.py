@@ -5,8 +5,7 @@ import email
 import tempfile, xlrd
 import keyring
 
-def getAttachmentsInEmail( email_body):
-    mail = email.message_from_string(email_body)
+def getAttachmentsInEmail(mail):
     if mail.get_content_maintype() != 'multipart':
         return
     for part in mail.walk():
@@ -31,7 +30,8 @@ resp, data = server.fetch(mail, '(RFC822)')
 
 filename = tempfile.mkstemp(suffix=".xlsx")[1]
 file = open(filename, 'r+')
-file.write(getAttachmentsInEmail(data[0][1]))
+msg = email.message_from_string(data[0][1])
+file.write(getAttachmentsInEmail(msg))
 file.close()
 
 book = xlrd.open_workbook(filename,formatting_info=True)
@@ -40,5 +40,28 @@ sheet = book.sheet_by_index(1)
 lines = reduce(lambda r, v: (len(r) != 0 and r[-1].value == v.value) and r or r + [v], sheet.col_slice(1,9,40), [])
 # lines = reduce(lambda r, v: (len(r) == 0 or r[-1].value == "") and r or r + [v], lines, [])
 
+import json
+menu = []
+item = {}
+item['description'] = []
 for row in filter(lambda x: "Zusatz" not in x.value, lines):
-    print book.font_list[book.xf_list[row.xf_index].font_index].height; print row.value
+    font_height = book.font_list[book.xf_list[row.xf_index].font_index].height
+
+    if row.value != "":
+        if font_height == 220:
+           item['preamble'] = row.value
+        if font_height == 480:
+            item['title'] = row.value
+        if font_height == 320 or font_height == 280:
+            item['description'].append(row.value)
+    elif row.value == "" and 'title' in item:
+        menu.append(item)
+        item = {}
+        item['description'] = []
+
+# e4
+
+from jinja2 import Environment, PackageLoader, select_autoescape
+env = Environment(loader=PackageLoader('menu', 'templates'),autoescape=select_autoescape(['html', 'xml']))
+template = env.get_template('template.html')
+print template.render({ "menu": menu, "date": msg['Date'] })
