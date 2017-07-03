@@ -1,12 +1,61 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="5" />
+<meta http-equiv="refresh" content="3600" />
 <title>Metro Menu for {{ date }}</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<style type="text/css">
+#wrapper {
+
+}
+#div1 {
+    display: inline-block;
+    width:40%;
+    height:100%;
+}
+#giphyme {
+    display: inline-block;
+    align: left;
+    vertical-align: top;
+    margin-top: 10px;
+    height:160px;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+</style>
+<script type="application/javascript">
+document.addEventListener('DOMContentLoaded', function () {
+    q = "city-wok"; // search query
+    request = new XMLHttpRequest;
+    request.open('GET', 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=' + q, true);
+
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        data = JSON.parse(request.responseText).data.image_url;
+        console.log(data);
+        document.getElementById("giphyme").innerHTML = '<img src = "' + data + '"  title="GIF via Giphy">';
+      } else {
+        console.log('reached giphy, but API returned an error');
+      }
+    };
+
+    request.onerror = function() {
+      console.log('connection error');
+    };
+
+    request.send();
+
+});
+</script>
 </head>
 <body>
-<h3>Metro Menu for {{ date }}</h3>
+<div id="wrapper">
+<div><h3>Metro Menu for {{ date }}</h3></div>
+  <div id="div1">
 {% for item in menu %}
  <h4>{{ item.title }} {{ '('+item.preamble+')' if 'preamble' in item else ""}}</h4>
   <ul>
@@ -14,5 +63,11 @@
     <li>{{ desc }}</li>
  {% endfor %}
   </ul>
+{% endfor %}</div>
+{% for item in menu %}
+ {% if 'preamble' in item and "Wok" in item['preamble'] %}
+ <div id="giphyme"></div>
+ {% endif %}
 {% endfor %}
+</div>
 </body>
